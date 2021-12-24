@@ -43,9 +43,9 @@ runs:
       if: steps.poetry-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        if [ ! -z ${{ inputs.ssh_key }} ]; then
+        if [ ! -z "${{ inputs.ssh_key }}" ]; then
             eval "$(ssh-agent -s)"
-            bash -c 'ssh-add - <<< "${{ inputs.ssh_key }}"'
+            ssh-add - <<< "${{ inputs.ssh_key }}"
         fi
 
         poetry install
