@@ -29,7 +29,7 @@ runs:
     - name: Install and configure Poetry
       shell: bash
       run: |
-        curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python - --yes --version=${{ inputs.poetry_version }}
+        curl -sSL https://install.python-poetry.org | python - --yes --version=${{ inputs.poetry_version }}
         echo "$HOME/.poetry/bin" >> $GITHUB_PATH
 
     - name: Restore virtualenv from Poetry cache
