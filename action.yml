@@ -9,7 +9,7 @@ inputs:
   python_version:
     description: "Python version to use"
     required: true
-    default: "3.10.0"
+    default: "3.10.4"
   ssh_key:
     description: "SSH key to use to clone private repositories"
     required: false
