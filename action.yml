@@ -39,6 +39,12 @@ runs:
         path: ~/.cache/pypoetry/virtualenvs
         key: poetry-${{ inputs.python_version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
 
+    # ToDo: replace with `poetry lock --check` after upgrade to Poetry 1.2.X
+    - name: Check poetry.lock is up to date with pyproject.toml
+      run: |
+        exit $(poetry export -o requirements.txt | grep "Warning: The lock file is not up to date with the latest changes in pyproject.toml." | wc -l)
+      shell: bash
+
     - name: Create virtualenv and install dependencies
       if: steps.poetry-cache.outputs.cache-hit != 'true'
       shell: bash
