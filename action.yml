@@ -22,7 +22,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
       with:
         python-version: ${{ inputs.python_version }}
 
@@ -33,7 +33,7 @@ runs:
         echo "$HOME/.poetry/bin" >> $GITHUB_PATH
 
     - name: Restore virtualenv from Poetry cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       id: poetry-cache
       with:
         path: ~/.cache/pypoetry/virtualenvs
