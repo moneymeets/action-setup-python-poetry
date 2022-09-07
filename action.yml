@@ -13,6 +13,10 @@ inputs:
   ssh_key:
     description: "SSH key to use to clone private repositories"
     required: false
+  poetry_virtualenvs_path:
+    description: "Poetry virtualenvs path"
+    required: false
+    default: "/home/runner/.cache/pypoetry/virtualenvs"
 
 outputs:
   python-version:
@@ -36,7 +40,7 @@ runs:
       uses: actions/cache@v3
       id: poetry-cache
       with:
-        path: ~/.cache/pypoetry/virtualenvs
+        path: ${{ inputs.poetry_virtualenvs_path }}
         key: poetry-${{ inputs.python_version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
 
     - run: poetry lock --check
@@ -45,6 +49,8 @@ runs:
     - name: Create virtualenv and install dependencies
       if: steps.poetry-cache.outputs.cache-hit != 'true'
       shell: bash
+      env:
+        POETRY_VIRTUALENVS_PATH: ${{ inputs.poetry_virtualenvs_path }}
       run: |
         if [ ! -z "${{ inputs.ssh_key }}" ]; then
             eval "$(ssh-agent -s)"
