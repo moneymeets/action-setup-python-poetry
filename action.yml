@@ -17,6 +17,10 @@ inputs:
     description: "Poetry virtualenvs path"
     required: false
     default: "/home/runner/.cache/pypoetry/virtualenvs"
+  working_directory:
+    description: "Working directory, defaults to GITHUB_WORKSPACE"
+    required: false
+    default: ${{ github.workspace }}
 
 outputs:
   python-version:
@@ -44,11 +48,12 @@ runs:
         key: poetry-${{ inputs.python_version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
 
     - run: poetry lock --check
-      shell: bash
+      working-directory: ${{ inputs.working_directory }}
 
     - name: Create virtualenv and install dependencies
       if: steps.poetry-cache.outputs.cache-hit != 'true'
       shell: bash
+      working-directory: ${{ inputs.working_directory }}
       env:
         POETRY_VIRTUALENVS_PATH: ${{ inputs.poetry_virtualenvs_path }}
       run: |
