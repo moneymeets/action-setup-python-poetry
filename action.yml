@@ -48,6 +48,7 @@ runs:
         key: poetry-${{ inputs.python_version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
 
     - run: poetry lock --check
+      shell: bash
       working-directory: ${{ inputs.working_directory }}
 
     - name: Create virtualenv and install dependencies
