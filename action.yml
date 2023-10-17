@@ -5,11 +5,11 @@ inputs:
   poetry_version:
     description: "Poetry version to install"
     required: true
-    default: "1.5.1"
+    default: "1.6.1"
   python_version:
     description: "Python version to use"
     required: true
-    default: "3.11.5"
+    default: "3.12.0"
   ssh_key:
     description: "SSH key to use to clone private repositories"
     required: false
@@ -47,7 +47,7 @@ runs:
         path: ${{ inputs.poetry_virtualenvs_path }}
         key: poetry-${{ inputs.python_version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
 
-    - run: poetry lock --check
+    - run: poetry check --lock
       shell: bash
       working-directory: ${{ inputs.working_directory }}
 
