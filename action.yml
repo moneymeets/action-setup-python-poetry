@@ -4,19 +4,13 @@ description: "Set up a specific version of Poetry with specific version of Pytho
 inputs:
   poetry_version:
     description: "Poetry version to install"
-    required: true
-    default: "1.5.1"
+    required: false
   python_version:
     description: "Python version to use"
-    required: true
-    default: "3.11.5"
+    required: false
   ssh_key:
     description: "SSH key to use to clone private repositories"
     required: false
-  poetry_virtualenvs_path:
-    description: "Poetry virtualenvs path"
-    required: false
-    default: "/home/runner/.cache/pypoetry/virtualenvs"
   working_directory:
     description: "Working directory, defaults to GITHUB_WORKSPACE"
     required: false
@@ -25,38 +19,58 @@ inputs:
 outputs:
   python-version:
     description: "Python version"
-    value: ${{ inputs.python_version }}
+    value: ${{ steps.setup-python.outputs.python-version }}
+  poetry-version:
+    description: "Poetry version"
+    value: ${{ steps.detect-versions.outputs.poetry-version }}
 
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-python@v4
-      with:
-        python-version: ${{ inputs.python_version }}
+
+    - name: Determine Python and Poetry versions
+      id: detect-versions
+      shell: bash
+      working-directory: ${{ inputs.working_directory }}
+      run: |
+        if [ -z "${{ inputs.python_version }}" ] ; then
+            PYTHON_VERSION="$(sed -n -e '/^\[metadata\]/,/^\[/p' poetry.lock | sed -n -e 's/^python-versions[[:space:]]*=[[:space:]]*//p' | tr -d \"'[:space:]'\'~^)"
+        else
+            PYTHON_VERSION="${{ inputs.python_version }}"
+        fi
+
+        if [ -z "${{ inputs.poetry_version }}" ] ; then
+            POETRY_VERSION="$(head --lines=1 poetry.lock | grep --only-matching '[0-9]\+\.[0-9]\+\.[0-9]\+')"
+        else
+            POETRY_VERIONS="${{ inputs.poetry_version }}"
+        fi
+
+        echo "python-version=$PYTHON_VERSION" >> $GITHUB_OUTPUT
+        echo "poetry-version=$POETRY_VERSION" >> $GITHUB_OUTPUT
 
     - name: Install and configure Poetry
       shell: bash
-      run: |
-        curl -sSL https://install.python-poetry.org | python - --yes --version=${{ inputs.poetry_version }}
-        echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      run: pipx install poetry==${{ steps.detect-versions.outputs.poetry-version }}
 
-    - name: Restore virtualenv from Poetry cache
-      uses: actions/cache@v3
-      id: poetry-cache
+    - uses: actions/setup-python@v4
+      id: setup-python
       with:
-        path: ${{ inputs.poetry_virtualenvs_path }}
-        key: poetry-${{ inputs.python_version }}-${{ hashFiles('**/poetry.lock', '**/pyproject.toml') }}
+        python-version: '${{ steps.detect-versions.outputs.python-version }}'
+        cache: 'poetry'
+        cache-dependency-path: ${{ inputs.working_directory }}/poetry.lock
 
-    - run: poetry lock --check
+    - run: |
+        if [ "$(echo ${{ steps.detect-versions.outputs.poetry-version }} | cut -c1-4)" == "1.5." ]; then
+            poetry lock --check
+        else
+            poetry check --lock
+        fi
       shell: bash
       working-directory: ${{ inputs.working_directory }}
 
     - name: Create virtualenv and install dependencies
-      if: steps.poetry-cache.outputs.cache-hit != 'true'
       shell: bash
       working-directory: ${{ inputs.working_directory }}
-      env:
-        POETRY_VIRTUALENVS_PATH: ${{ inputs.poetry_virtualenvs_path }}
       run: |
         if [ ! -z "${{ inputs.ssh_key }}" ]; then
             eval "$(ssh-agent -s)"
