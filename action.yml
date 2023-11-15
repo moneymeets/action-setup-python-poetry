@@ -32,25 +32,12 @@ runs:
   using: "composite"
   steps:
 
-    - name: Determine Python and Poetry versions
+    - uses: moneymeets/moneymeets-composite-actions/detect-python-version@master
       id: detect-versions
-      shell: bash
-      working-directory: ${{ inputs.working_directory }}
-      run: |
-        if [ -z "${{ inputs.python_version }}" ] ; then
-            PYTHON_VERSION="$(sed -n -e '/^\[metadata\]/,/^\[/p' poetry.lock | sed -n -e 's/^python-versions[[:space:]]*=[[:space:]]*//p' | tr -d \"'[:space:]'\'~^)"
-        else
-            PYTHON_VERSION="${{ inputs.python_version }}"
-        fi
-
-        if [ -z "${{ inputs.poetry_version }}" ] ; then
-            POETRY_VERSION="$(head --lines=1 poetry.lock | grep --only-matching '[0-9]\+\.[0-9]\+\.[0-9]\+')"
-        else
-            POETRY_VERIONS="${{ inputs.poetry_version }}"
-        fi
-
-        echo "python-version=$PYTHON_VERSION" >> $GITHUB_OUTPUT
-        echo "poetry-version=$POETRY_VERSION" >> $GITHUB_OUTPUT
+      with:
+        poetry-version: ${{ inputs.poetry_version }}
+        python-version: ${{ inputs.python_version }}
+        working-directory: ${{ inputs.working_directory }}
 
     - name: Install and configure Poetry
       shell: bash
@@ -59,7 +46,7 @@ runs:
     - uses: actions/setup-python@v4
       id: setup-python
       with:
-        python-version: '${{ steps.detect-versions.outputs.python-version }}'
+        python-version: '${{ steps.detect-versions.outputs.python-version-constraint }}'
         # ToDo: Remove conditional expressions below when https://github.com/actions/setup-python/issues/361 is fixed
         cache: ${{ inputs.poetry_cache_enabled == 'true' && 'poetry' || ''}}
         cache-dependency-path: ${{ inputs.poetry_cache_enabled == 'true' && format('{0}/poetry.lock', inputs.working_directory) || ''}}
