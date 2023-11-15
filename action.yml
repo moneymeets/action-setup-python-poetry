@@ -35,9 +35,9 @@ runs:
     - uses: moneymeets/moneymeets-composite-actions/detect-python-version@master
       id: detect-versions
       with:
-        poetry-version: ${{ inputs.poetry_version }}
-        python-version: ${{ inputs.python_version }}
-        working-directory: ${{ inputs.working_directory }}
+        poetry_version: ${{ inputs.poetry_version }}
+        python_version: ${{ inputs.python_version }}
+        working_directory: ${{ inputs.working_directory }}
 
     - name: Install and configure Poetry
       shell: bash
