@@ -32,6 +32,8 @@ runs:
   using: "composite"
   steps:
 
+    - uses: moneymeets/moneymeets-composite-actions/block-poetry-version-downgrade@master
+
     - uses: moneymeets/moneymeets-composite-actions/detect-python-version@master
       id: detect-versions
       with:
