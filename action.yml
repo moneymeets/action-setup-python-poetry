@@ -15,6 +15,10 @@ inputs:
     description: "Working directory, defaults to GITHUB_WORKSPACE"
     required: false
     default: ${{ github.workspace }}
+  with_checks:
+    description: "Perform checks during Python setup"
+    required: false
+    default: "true"
   # ToDo: Remove disable cache option when https://github.com/actions/setup-python/issues/361 is fixed
   poetry_cache_enabled:
     description: "Caching of Poetry environment"
@@ -33,6 +37,7 @@ runs:
   steps:
 
     - uses: moneymeets/moneymeets-composite-actions/block-poetry-version-downgrade@master
+      if: ${{ inputs.with_checks == 'true' }}
 
     - uses: moneymeets/moneymeets-composite-actions/detect-python-version@master
       id: detect-versions
