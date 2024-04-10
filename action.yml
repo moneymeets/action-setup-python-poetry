@@ -77,3 +77,7 @@ runs:
         fi
 
         poetry install
+
+    - run: poetry run invalid_package_versions
+      shell: bash
+      working-directory: ${{ inputs.working_directory }}
