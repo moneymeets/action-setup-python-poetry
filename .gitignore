@@ -1,0 +1,7 @@
+/.idea/*
+!/.idea/watcherTasks.xml
+__pycache__/
+.coverage
+.tmp/
+
+.DS_Store
