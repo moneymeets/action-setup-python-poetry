@@ -58,7 +58,7 @@ runs:
         cache: ${{ inputs.poetry_cache_enabled == 'true' && 'poetry' || ''}}
         cache-dependency-path: ${{ inputs.poetry_cache_enabled == 'true' && format('{0}/poetry.lock', inputs.working_directory) || ''}}
 
-    - run: python ${{ github.action_path }}/invalid_package_versions/runner.py
+    - run: poetry run --directory ${{ github.action_path }} invalid_package_versions
       shell: bash
       working-directory: ${{ inputs.working_directory }}
 

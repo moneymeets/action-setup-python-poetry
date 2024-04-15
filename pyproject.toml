@@ -6,7 +6,7 @@ authors = ["moneymeets GmbH <service@moneymeets.com>"]
 
 
 [tool.poetry.scripts]
-merge_checks_runner = 'invalid_package_versions.runner:run'
+invalid_package_versions = 'invalid_package_versions.runner:run'
 
 
 [tool.poetry.dependencies]
