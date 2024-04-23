@@ -69,10 +69,10 @@ runs:
 
     - name: Check for invalid package versions in pyproject.toml
       run: |
-        poetry install --directory ${{ github.action_path }}
-        poetry run --directory ${{ github.action_path }} invalid_package_versions
+        poetry install
+        poetry run invalid_package_versions ${{ inputs.working_directory }}/pyproject.toml
       shell: bash
-      working-directory: ${{ github.workspace }}
+      working-directory: ${{ github.action_path }}
 
     - name: Create virtualenv and install dependencies
       shell: bash
