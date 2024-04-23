@@ -30,7 +30,8 @@ def get_invalid_package_versions(pyproject_toml_file_text: str) -> Sequence[tupl
 
 
 def main():
-    if invalid_versions := get_invalid_package_versions(Path("pyproject.toml").read_text()):
+    pyproject_path = Path(sys.argv[1] if len(sys.argv) > 1 else "pyproject.toml")
+    if invalid_versions := get_invalid_package_versions(pyproject_path.read_text()):
         print(f"Invalid package versions found in pyproject.toml: {invalid_versions}")
         sys.exit(1)
 
