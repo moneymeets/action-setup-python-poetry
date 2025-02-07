@@ -13,7 +13,7 @@ invalid_package_versions = "action_setup_python_poetry.invalid_package_versions:
 python = "~3.12"
 
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "*"
 pytest-cov = "*"
 
