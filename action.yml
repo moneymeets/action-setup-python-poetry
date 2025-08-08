@@ -55,10 +55,7 @@ runs:
 
     - name: Install and configure Poetry
       shell: bash
-      run: |
-        echo "virtualenv==20.32.0" > constraints.txt
-        pipx install poetry==${{ steps.detect-versions.outputs.poetry-version }} --pip-args="--constraint=constraints.txt"
-        rm constraints.txt
+      run: pipx install poetry==${{ steps.detect-versions.outputs.poetry-version }}
 
     - name: Setup Python for action
       uses: actions/setup-python@v5
