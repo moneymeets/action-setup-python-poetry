@@ -19,7 +19,7 @@ def get_invalid_package_versions(pyproject_toml_file_text: str) -> Sequence[tupl
     return tuple(
         (package, version_str)
         for package, version in (
-            *poetry_data["dependencies"].items(),
+            *poetry_data.get("dependencies", {}).items(),
             *poetry_data.get("dev-dependencies", {}).items(),
             *itertools.chain.from_iterable(
                 (group["dependencies"].items() for _, group in poetry_data.get("group", {}).items()),
