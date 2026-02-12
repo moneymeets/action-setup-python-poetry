@@ -3,22 +3,18 @@ name = "action-setup-python-poetry"
 version = "0.1.0"
 description = "GitHub Actions to setup Python and Poetry"
 authors = [{ name = "moneymeets", email = "service@moneymeets.com" }]
-requires-python = ">=3.12"
+requires-python = "~=3.14.0"
 
 [project.scripts]
 invalid_package_versions = "action_setup_python_poetry.invalid_package_versions:main"
 
-
 [tool.poetry.dependencies]
-python = "~3.12"
-
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
 pytest-cov = "*"
 
 ruff = "*"
-
 
 [build-system]
 requires = ["poetry-core"]
