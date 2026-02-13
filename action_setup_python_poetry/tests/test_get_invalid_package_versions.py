@@ -15,7 +15,7 @@ class GetInvalidPackageVersionsTest(TestCase):
         invalid_pyproject_toml = (TEST_DATA_DIR / "pyproject_mock_invalid.toml").read_text()
         self.assertEqual(
             (
-                ("python", ">=3.12"),
+                ("django", ">=4.2"),
                 ("pytest", ">=8"),
                 ("test-package-1", ">=1"),
                 ("test-package-2", ">=1"),
