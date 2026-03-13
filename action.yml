@@ -58,7 +58,7 @@ runs:
       run: pipx install poetry==${{ steps.detect-versions.outputs.poetry-version }}
 
     - name: Setup Python for action
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       id: setup-python-action
       with:
         python-version: '${{ steps.detect-versions-action.outputs.python-version-constraint }}'
@@ -74,7 +74,7 @@ runs:
       working-directory: ${{ github.action_path }}
 
     - name: Setup Python for repository
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       id: setup-python
       with:
         python-version: '${{ steps.detect-versions.outputs.python-version-constraint }}'
